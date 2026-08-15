@@ -13,8 +13,8 @@
   --text:#151821;--dim:#6D7488;
   /* 구조색은 하나(군청). 화면의 채도는 휴가 종류 색에만 쓴다 */
   --accent:#24305A;--accent-soft:#E8EBF3;
-  /* 지나온 복무 구간 — 채움이 끝나는 지점이 곧 '오늘' */
-  --past:#CBD4E8;
+  /* 스트립 바 — 푸른 기를 뺀 중성 회색. 채움이 끝나는 지점이 곧 '오늘' */
+  --bar:#ECECEE;--past:#D6D6DA;
   /* 신호색 : 오늘·전역·삭제에만 */
   --red:#C0392B;
   --green:#0E7C66;--yellow:#8A6100;--purple:#463C7A;
@@ -77,7 +77,7 @@ input,select,button,textarea{font-family:inherit;}
 .strip-mk.end{padding-left:0;padding-right:7px;border-left:none;border-right:2px solid var(--accent);text-align:right;transform:translateX(-100%);}
 .strip-mk b{display:block;font-weight:700;color:var(--text);}
 .strip-mk em{display:block;font-style:normal;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;}
-.strip-bar{position:relative;height:38px;border-radius:9px;background:var(--surf3);overflow:hidden;}
+.strip-bar{position:relative;height:38px;border-radius:9px;background:var(--bar);overflow:hidden;}
 .strip-fill{position:absolute;left:0;top:0;bottom:0;background:var(--past);}
 .strip-rk{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);}
 .strip-vac{position:absolute;top:0;bottom:0;border-radius:1px;}
