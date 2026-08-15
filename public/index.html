@@ -184,7 +184,7 @@ input,select,button,textarea{font-family:inherit;}
 .rb{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:7px;margin-left:5px;}
 
 /* SHARE MODAL */
-.sh-code{background:#1a1d2e;color:#06d6a0;font-size:10px;border-radius:7px;padding:10px;max-height:120px;overflow-y:auto;word-break:break-all;white-space:pre-wrap;border:1px solid #2e3150;margin:8px 0;}
+.sh-code{background:#1a1d2e;color:#93C4B6;font-size:10px;border-radius:7px;padding:10px;max-height:120px;overflow-y:auto;word-break:break-all;white-space:pre-wrap;border:1px solid #2e3150;margin:8px 0;}
 .sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
 .sh-btn{padding:8px;border-radius:7px;border:none;font-size:12px;font-weight:700;cursor:pointer;}
 
@@ -260,14 +260,14 @@ input,select,button,textarea{font-family:inherit;}
     <div class="stat"><div class="stat-l">마지막 복귀</div><div class="stat-v" id="s-la">—</div><div class="stat-s" id="s-la-y">—</div></div>
   </div>
   <div class="legend">
-    <div class="li"><div class="ld" style="background:#ff6b9d"></div>이병연가</div>
-    <div class="li"><div class="ld" style="background:#ff8c69"></div>일병연가</div>
-    <div class="li"><div class="ld" style="background:#ff9a3c"></div>상병연가</div>
-    <div class="li"><div class="ld" style="background:#ffd166"></div>병장연가</div>
-    <div class="li"><div class="ld" style="background:#06d6a0"></div>위로휴가</div>
-    <div class="li"><div class="ld" style="background:#4cc9f0"></div>포상휴가</div>
-    <div class="li"><div class="ld" style="background:#a78bfa"></div>성과제</div>
-    <div class="li"><div class="ld" style="background:#f4a261"></div>성과제외박</div>
+    <div class="li"><div class="ld" style="background:#E3A3B5"></div>이병연가</div>
+    <div class="li"><div class="ld" style="background:#E3AE9A"></div>일병연가</div>
+    <div class="li"><div class="ld" style="background:#DCB68B"></div>상병연가</div>
+    <div class="li"><div class="ld" style="background:#D9C68F"></div>병장연가</div>
+    <div class="li"><div class="ld" style="background:#93C4B6"></div>위로휴가</div>
+    <div class="li"><div class="ld" style="background:#9FC0CE"></div>포상휴가</div>
+    <div class="li"><div class="ld" style="background:#B4ACCF"></div>성과제</div>
+    <div class="li"><div class="ld" style="background:#D6B597"></div>성과제외박</div>
     <div class="li" style="margin-left:auto;color:var(--accent);font-size:10px;">✏️ 클릭·드래그</div>
   </div>
   <div class="cal" id="cal"></div>
@@ -389,8 +389,8 @@ input,select,button,textarea{font-family:inherit;}
   <div class="mt">🔗 공유 / 가져오기</div>
   <p style="font-size:11px;color:var(--dim);margin-bottom:10px">JSON 파일로 내보내거나 가져와서 다른 기기·사람과 공유하세요.</p>
   <div class="sh-grid">
-   <button class="sh-btn" style="background:#06d6a0;color:#000" onclick="exportJSON()">📤 JSON 내보내기</button>
-   <button class="sh-btn" style="background:#f4a261;color:#000" onclick="document.getElementById('imp-file').click();closeShare()">📥 JSON 가져오기</button>
+   <button class="sh-btn" style="background:#93C4B6;color:#000" onclick="exportJSON()">📤 JSON 내보내기</button>
+   <button class="sh-btn" style="background:#D6B597;color:#000" onclick="document.getElementById('imp-file').click();closeShare()">📥 JSON 가져오기</button>
   </div>
   <div style="font-size:11px;color:var(--dim);margin-bottom:4px">📋 텍스트 공유</div>
   <div class="sh-code" id="sh-preview"></div>
@@ -432,7 +432,7 @@ input,select,button,textarea{font-family:inherit;}
 
    <div class="sh-grid">
     <button class="sh-btn" style="background:var(--accent);color:#fff" id="cl-push">⬆️ 서버에 저장</button>
-    <button class="sh-btn" style="background:#06d6a0;color:#000" id="cl-pull">⬇️ 서버에서 불러오기</button>
+    <button class="sh-btn" style="background:#93C4B6;color:#000" id="cl-pull">⬇️ 서버에서 불러오기</button>
    </div>
 
    <div class="cl-sec">👥 함께 편집</div>
@@ -478,9 +478,9 @@ window.SUPABASE_ANON_KEY = 'sb_publishable_6UUkYT6UKRcP7PahM3qOSw_vkviB6J2';
 //  DATA
 // ════════════════════════════════════
 const C={
-  '이병연가':'#ff6b9d','일병연가':'#ff8c69','상병연가':'#ff9a3c','병장연가':'#ffd166',
-  '위로휴가':'#06d6a0','포상휴가':'#4cc9f0','성과제':'#a78bfa','성과제외박':'#f4a261',
-  '청원휴가':'#c084fc','공가':'#94a3b8'
+  '이병연가':'#E3A3B5','일병연가':'#E3AE9A','상병연가':'#DCB68B','병장연가':'#D9C68F',
+  '위로휴가':'#93C4B6','포상휴가':'#9FC0CE','성과제':'#B4ACCF','성과제외박':'#D6B597',
+  '청원휴가':'#C0AACF','공가':'#BCC2CB'
 };
 const TYPES=Object.keys(C);
 const BM={army:18,navy:20,airforce:21,marine:18};
@@ -493,26 +493,26 @@ let S={enlist:'',discharge:'',branch:'airforce',remoteOn:false,remoteDays:3,vacP
 
 let PD={
   yn:[
-    {n:'일병연가',c:'#ff8c69',t:17,u:0},
-    {n:'상병연가',c:'#ff9a3c',t:13,u:0},
-    {n:'병장연가',c:'#ffd166',t:16,u:0},
-    {n:'청원휴가',c:'#c084fc',t:6,u:0},
-    {n:'공가',c:'#94a3b8',t:0,u:0},
+    {n:'일병연가',c:'#E3AE9A',t:17,u:0},
+    {n:'상병연가',c:'#DCB68B',t:13,u:0},
+    {n:'병장연가',c:'#D9C68F',t:16,u:0},
+    {n:'청원휴가',c:'#C0AACF',t:6,u:0},
+    {n:'공가',c:'#BCC2CB',t:0,u:0},
   ],
   wi:[
-    {n:'수료외박',c:'#06d6a0',t:3,u:0},
-    {n:'독립기념관',c:'#06d6a0',t:1,u:0},
-    {n:'위로휴가',c:'#06d6a0',t:0,u:0},
-    {n:'구직청원',c:'#06d6a0',t:2,u:0},
-    {n:'명예기자단',c:'#06d6a0',t:6,u:0},
+    {n:'수료외박',c:'#93C4B6',t:3,u:0},
+    {n:'독립기념관',c:'#93C4B6',t:1,u:0},
+    {n:'위로휴가',c:'#93C4B6',t:0,u:0},
+    {n:'구직청원',c:'#93C4B6',t:2,u:0},
+    {n:'명예기자단',c:'#93C4B6',t:6,u:0},
   ],
   po:[
-    {n:'가점포상(15점)',c:'#4cc9f0',t:0,u:0},
-    {n:'가족초청',c:'#4cc9f0',t:2,u:0},
-    {n:'5315-n차',c:'#4cc9f0',t:16,u:0},
-    {n:'대통령표창',c:'#4cc9f0',t:0,u:0},
-    {n:'인바디',c:'#4cc9f0',t:0,u:0},
-    {n:'마일리지',c:'#4cc9f0',t:0,u:0},
+    {n:'가점포상(15점)',c:'#9FC0CE',t:0,u:0},
+    {n:'가족초청',c:'#9FC0CE',t:2,u:0},
+    {n:'5315-n차',c:'#9FC0CE',t:16,u:0},
+    {n:'대통령표창',c:'#9FC0CE',t:0,u:0},
+    {n:'인바디',c:'#9FC0CE',t:0,u:0},
+    {n:'마일리지',c:'#9FC0CE',t:0,u:0},
   ]
 };
 
@@ -962,7 +962,7 @@ function initCfg(){
 function showRI(enlist){
   const box=g('ri-box'),row=g('ri-row');if(!box)return;
   const branch=g('c-br').value,rs=rankSched(enlist,branch);
-  const rc={이병:'#adb5ff',일병:'#ff8c69',상병:'#ff9a3c',병장:'#ffd166'};
+  const rc={이병:'#B9BDD6',일병:'#E3AE9A',상병:'#DCB68B',병장:'#D9C68F'};
   box.style.display='block';
   const di=(g('c-di')&&g('c-di').value)||S.discharge||'';
   row.innerHTML=rs.map((s,i)=>{
@@ -1027,7 +1027,7 @@ function sumPG(gid){
 }
 
 function addRow(gid){
-  const cc={yn:'#ff9a3c',wi:'#06d6a0',po:'#4cc9f0'};
+  const cc={yn:'#DCB68B',wi:'#93C4B6',po:'#9FC0CE'};
   PD[gid].push({n:'새 항목',c:cc[gid]||'#aaa',t:0,u:0});
   renderPG(gid);
   const wrap=g(gid+'-wrap');
@@ -1049,13 +1049,13 @@ function buildSK(){
     const di=cel('input','pi',{type:'date',value:r.date||'',dataset:{sk:'date',idx}}); di.style.fontSize='10px';
     const oi=cel('input','pi',{type:'number',value:r.ov||0,min:0,dataset:{sk:'ov',idx}});
     const ui=cel('input','pi',{type:'number',value:r.uov||0,min:0,dataset:{sk:'uov',idx}});
-    const rs=document.createElement('span');rs.className='prm';rs.textContent=rem;rs.style.color=rem>0?'#f4a261':'var(--dim)';rs.style.fontWeight='800';
+    const rs=document.createElement('span');rs.className='prm';rs.textContent=rem;rs.style.color=rem>0?'#D6B597':'var(--dim)';rs.style.fontWeight='800';
     const db=document.createElement('button');db.className='pd';db.textContent='✕';db.dataset.skdel=idx;
 
     [ni,di,oi,ui].forEach(el=>el.addEventListener('input',ev=>{
       const i=+ev.target.dataset.idx,f=ev.target.dataset.sk;
       if(f==='ov'||f==='uov')SK[i][f]=+ev.target.value||0;else SK[i][f]=ev.target.value;
-      const ro=Math.max(0,(SK[i].ov||0)-(SK[i].uov||0));rs.textContent=ro;rs.style.color=ro>0?'#f4a261':'var(--dim)';
+      const ro=Math.max(0,(SK[i].ov||0)-(SK[i].uov||0));rs.textContent=ro;rs.style.color=ro>0?'#D6B597':'var(--dim)';
       sumSK();
     }));
     db.addEventListener('click',ev=>{const i=+ev.target.closest('[data-skdel]').dataset.skdel;SK.splice(i,1);buildSK();});
@@ -1078,7 +1078,7 @@ function sumSK(){
   const t=SK.reduce((s,r)=>s+(r.ov||0),0),u=SK.reduce((s,r)=>s+(r.uov||0),0),r=Math.max(0,t-u);
   const ec=g('sk-c'),et=g('sk-t'),eu=g('sk-u'),er=g('sk-r');
   if(ec)ec.textContent=SK.length+'차수';if(et)et.textContent=t+'일';if(eu)eu.textContent=u+'일';
-  if(er){er.textContent=r+'일';er.style.color=r>0?'#f4a261':'var(--dim)';}
+  if(er){er.textContent=r+'일';er.style.color=r>0?'#D6B597':'var(--dim)';}
 }
 
 function skAuto(){
@@ -1270,7 +1270,9 @@ g('edit-del').onclick=()=>{
 // ════════════════════════════════════
 // 스트립에서는 종류별로 색을 다 나누지 않고 성격이 같은 것끼리 묶는다.
 // PD 그룹은 '보유 일수 표'의 항목명이라 휴가 종류(TYPES)와 어휘가 달라 쓰지 않는다.
-const GC={yn:'#E8734A',wi:'#2F9E7E',po:'#4A73C4'};
+// 셋 다 채도를 낮추되 색상(hue)은 서로 떼어놓는다.
+// 포상을 파랑으로 두면 군청 구분선과 같은 계열로 읽혀서 황토로 옮겼다.
+const GC={yn:'#B4614A',wi:'#5A8A6E',po:'#A5853F'};
 const GN={yn:'연가',wi:'위로·기타',po:'포상'};
 const VG={
   '이병연가':'yn','일병연가':'yn','상병연가':'yn','병장연가':'yn','청원휴가':'yn','공가':'yn',
@@ -1380,7 +1382,7 @@ function buildMonth({y,m},hvac,vm,rs){
   const mvacs=hvac.filter(v=>{const ms=new Date(y,m,1),me=new Date(y,m+1,0);return v.sd<=me&&v.ed>=ms;});
   let vdc=0;for(let d=1;d<=tot;d++){const k=`${y}-${z(m+1)}-${z(d)}`;if(vm[k])vdc++;}
   const rcs=rs.filter(s=>{if(s.isE)return false;const d=new Date(s.from);return d.getFullYear()===y&&d.getMonth()===m;});
-  const rc={이병:'#adb5ff',일병:'#ff8c69',상병:'#ff9a3c',병장:'#ffd166'};
+  const rc={이병:'#B9BDD6',일병:'#E3AE9A',상병:'#DCB68B',병장:'#D9C68F'};
 
   const card=document.createElement('div');card.className='mc'+(mvacs.length>0?' hv':'');
   const hdr=document.createElement('div');hdr.className='mh';
