@@ -70,11 +70,14 @@ input,select,button,textarea{font-family:inherit;}
 .strip-unit{font-size:var(--t2);color:var(--dim);font-weight:600;}
 .strip-rank{margin-left:auto;font-size:var(--t2);color:var(--dim);}
 .strip-rank b{color:var(--text);font-weight:700;}
-.strip-bar{position:relative;height:50px;border-radius:9px;background:var(--surf3);overflow:hidden;}
+.strip-marks{position:relative;height:38px;}
+.strip-mk{position:absolute;bottom:0;font-size:var(--t1);line-height:1.32;white-space:nowrap;padding-left:7px;border-left:2px solid var(--accent);}
+.strip-mk.end{padding-left:0;padding-right:7px;border-left:none;border-right:2px solid var(--accent);text-align:right;transform:translateX(-100%);}
+.strip-mk b{display:block;font-weight:700;color:var(--text);}
+.strip-mk em{display:block;font-style:normal;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;}
+.strip-bar{position:relative;height:38px;border-radius:9px;background:var(--surf3);overflow:hidden;}
 .strip-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);border-right:1px solid #C9D0E4;}
-.strip-rk{position:absolute;top:0;bottom:0;width:1px;background:var(--border);}
-.strip-rk span{position:absolute;top:50%;left:6px;transform:translateY(-50%);font-size:var(--t1);font-weight:700;color:var(--text);white-space:nowrap;line-height:1.35;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
-.strip-rk em{display:block;font-style:normal;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;}
+.strip-rk{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);}
 .strip-vac{position:absolute;top:0;bottom:0;border-radius:1px;}
 .strip-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);}
 .strip-today::after{content:"";position:absolute;top:0;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);}
@@ -236,6 +239,7 @@ input,select,button,textarea{font-family:inherit;}
      <div class="strip-unit">일 남음</div>
      <div class="strip-rank" id="st-rank">—</div>
     </div>
+    <div class="strip-marks" id="st-marks"></div>
     <div class="strip-bar" id="st-bar"></div>
     <div class="strip-ends"><span id="st-s">—</span><span id="st-pct">—</span><span id="st-e">—</span></div>
    </div>
@@ -1273,15 +1277,20 @@ function renderStrip(hvac,rs){
   rs.forEach(r=>{ if(ld(r.from)<=now) cur=r.rank; });
   g('st-rank').innerHTML='현재 <b>'+cur+'</b>';
 
-  const bar=g('st-bar'); bar.innerHTML='';
-  const add=(cls,style,html)=>{const d=document.createElement('div');d.className=cls;d.setAttribute('style',style);if(html)d.innerHTML=html;bar.appendChild(d);};
-  add('strip-fill','width:'+pos(now)+'%');
+  const bar=g('st-bar'), marks=g('st-marks');
+  bar.innerHTML=''; marks.innerHTML='';
+  const put=(el,cls,style,html)=>{const d=document.createElement('div');d.className=cls;d.setAttribute('style',style);if(html)d.innerHTML=html;el.appendChild(d);};
+
+  put(bar,'strip-fill','width:'+pos(now)+'%');
   hvac.forEach(v=>{ const a=pos(v.sd), b=pos(addD(v.ed,1));
-    add('strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+(C[v.type]||'#888')); });
-  // 계급선은 휴가 눈금 뒤에 그린다 — 라벨이 눈금에 가리지 않도록
+    put(bar,'strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+(C[v.type]||'#888')); });
+  // 계급 구분선 — 휴가 눈금 위에 얹어 항상 또렷하게
   rs.forEach((r,i)=>{ if(!i)return; const x=pos(ld(r.from)); if(x<=0||x>=100)return;
-    add('strip-rk','left:'+x+'%','<span>'+r.rank+'<em>'+r.from.slice(2).replace(/-/g,'.')+'</em></span>'); });
-  add('strip-today','left:'+pos(now)+'%');
+    put(bar,'strip-rk','left:'+x+'%');
+    // 라벨은 바 밖(위)에. 오른쪽 끝에 붙는 건 화면 밖으로 나가지 않게 뒤집는다
+    put(marks,'strip-mk'+(x>78?' end':''),'left:'+x+'%',
+        '<b>'+r.rank+'</b><em>'+r.from.slice(2).replace(/-/g,'.')+'</em>'); });
+  put(bar,'strip-today','left:'+pos(now)+'%');
 
   g('st-s').textContent=S.enlist.replace(/-/g,'.');
   g('st-e').textContent=S.discharge.replace(/-/g,'.');
