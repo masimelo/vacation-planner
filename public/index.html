@@ -82,6 +82,9 @@ input,select,button,textarea{font-family:inherit;}
 .strip-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);}
 .strip-today::after{content:"";position:absolute;top:0;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);}
 .strip-ends{display:flex;justify-content:space-between;font-size:var(--t1);color:var(--dim);margin-top:9px;font-variant-numeric:tabular-nums;}
+.strip-key{display:flex;gap:8px 16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:var(--t1);color:var(--dim);}
+.strip-key span{display:inline-flex;align-items:center;white-space:nowrap;}
+.strip-key i{width:9px;height:9px;border-radius:2px;margin-right:5px;flex-shrink:0;}
 
 /* LEGEND */
 .legend{display:flex;flex-wrap:wrap;gap:10px 14px;padding:12px 18px;background:var(--surf);border-bottom:1px solid var(--border);}
@@ -237,11 +240,13 @@ input,select,button,textarea{font-family:inherit;}
     <div class="strip-top">
      <div class="strip-num" id="st-num">—</div>
      <div class="strip-unit">일 남음</div>
+     <div class="strip-unit" id="st-pct">—</div>
      <div class="strip-rank" id="st-rank">—</div>
     </div>
     <div class="strip-marks" id="st-marks"></div>
     <div class="strip-bar" id="st-bar"></div>
-    <div class="strip-ends"><span id="st-s">—</span><span id="st-pct">—</span><span id="st-e">—</span></div>
+    <div class="strip-ends"><span id="st-s">—</span><span id="st-e">—</span></div>
+    <div class="strip-key" id="st-key"></div>
    </div>
   </div>
 
@@ -1263,6 +1268,17 @@ g('edit-del').onclick=()=>{
 // ════════════════════════════════════
 //  RENDER
 // ════════════════════════════════════
+// 스트립에서는 종류별로 색을 다 나누지 않고 성격이 같은 것끼리 묶는다.
+// PD 그룹은 '보유 일수 표'의 항목명이라 휴가 종류(TYPES)와 어휘가 달라 쓰지 않는다.
+const GC={yn:'#E8734A',wi:'#2F9E7E',po:'#4A73C4'};
+const GN={yn:'연가',wi:'위로·기타',po:'포상'};
+const VG={
+  '이병연가':'yn','일병연가':'yn','상병연가':'yn','병장연가':'yn','청원휴가':'yn','공가':'yn',
+  '위로휴가':'wi',
+  '포상휴가':'po','성과제':'po','성과제외박':'po'
+};
+function vacGroup(type){ return VG[type]||'wi'; }
+
 function renderStrip(hvac,rs){
   const el=g('strip'); if(!el)return;
   if(!S.enlist||!S.discharge){el.style.display='none';return;}
@@ -1272,7 +1288,9 @@ function renderStrip(hvac,rs){
   const pos=d=>Math.min(100,Math.max(0,((d-s)/864e5)/total*100));
 
   g('st-num').textContent=Math.max(0,Math.ceil((e-now)/864e5)).toLocaleString();
-  g('st-pct').textContent=Math.round(pos(now))+'% 복무';
+  g('st-pct').textContent='· '+Math.round(pos(now))+'% 복무';
+  g('st-key').innerHTML=['yn','wi','po'].map(k=>
+    '<span><i style="background:'+GC[k]+'"></i>'+GN[k]+'</span>').join('');
   let cur=rs.length?rs[0].rank:'이병';
   rs.forEach(r=>{ if(ld(r.from)<=now) cur=r.rank; });
   g('st-rank').innerHTML='현재 <b>'+cur+'</b>';
@@ -1283,7 +1301,7 @@ function renderStrip(hvac,rs){
 
   put(bar,'strip-fill','width:'+pos(now)+'%');
   hvac.forEach(v=>{ const a=pos(v.sd), b=pos(addD(v.ed,1));
-    put(bar,'strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+(C[v.type]||'#888')); });
+    put(bar,'strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+GC[vacGroup(v.type)]); });
   // 계급 구분선 — 휴가 눈금 위에 얹어 항상 또렷하게
   rs.forEach((r,i)=>{ if(!i)return; const x=pos(ld(r.from)); if(x<=0||x>=100)return;
     put(bar,'strip-rk','left:'+x+'%');
