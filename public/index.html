@@ -13,8 +13,8 @@
   --text:#151821;--dim:#6D7488;
   /* 구조색은 하나(군청). 화면의 채도는 휴가 종류 색에만 쓴다 */
   --accent:#24305A;--accent-soft:#E8EBF3;
-  /* 지나온 복무 구간과 '현재' 표시 */
-  --past:#E5DEF7;--now:#6F4FC7;
+  /* 지나온 복무 구간 — 채움이 끝나는 지점이 곧 '오늘' */
+  --past:#CBD4E8;
   /* 신호색 : 오늘·전역·삭제에만 */
   --red:#C0392B;
   --green:#0E7C66;--yellow:#8A6100;--purple:#463C7A;
@@ -81,9 +81,7 @@ input,select,button,textarea{font-family:inherit;}
 .strip-fill{position:absolute;left:0;top:0;bottom:0;background:var(--past);}
 .strip-rk{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);}
 .strip-vac{position:absolute;top:0;bottom:0;border-radius:1px;}
-.strip-wrap{position:relative;}
-.strip-dot{position:absolute;top:100%;margin-top:5px;width:11px;height:11px;border-radius:50%;background:var(--now);transform:translateX(-50%);}
-.strip-ends{display:flex;justify-content:space-between;font-size:var(--t1);color:var(--dim);margin-top:20px;font-variant-numeric:tabular-nums;}
+.strip-ends{display:flex;justify-content:space-between;font-size:var(--t1);color:var(--dim);margin-top:9px;font-variant-numeric:tabular-nums;}
 .strip-key{display:flex;gap:8px 16px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:var(--t1);color:var(--dim);}
 .strip-key span{display:inline-flex;align-items:center;white-space:nowrap;}
 .strip-key i{width:9px;height:9px;border-radius:2px;margin-right:5px;flex-shrink:0;}
@@ -246,7 +244,7 @@ input,select,button,textarea{font-family:inherit;}
      <div class="strip-rank" id="st-rank">—</div>
     </div>
     <div class="strip-marks" id="st-marks"></div>
-    <div class="strip-wrap"><div class="strip-bar" id="st-bar"></div><div class="strip-dot" id="st-dot"></div></div>
+    <div class="strip-bar" id="st-bar"></div>
     <div class="strip-ends"><span id="st-s">—</span><span id="st-e">—</span></div>
     <div class="strip-key" id="st-key"></div>
    </div>
@@ -1310,7 +1308,6 @@ function renderStrip(hvac,rs){
     // 라벨은 바 밖(위)에. 오른쪽 끝에 붙는 건 화면 밖으로 나가지 않게 뒤집는다
     put(marks,'strip-mk'+(x>78?' end':''),'left:'+x+'%',
         '<b>'+r.rank+'</b><em>'+r.from.slice(2).replace(/-/g,'.')+'</em>'); });
-  g('st-dot').style.left=pos(now)+'%';
 
   g('st-s').textContent=S.enlist.replace(/-/g,'.');
   g('st-e').textContent=S.discharge.replace(/-/g,'.');
