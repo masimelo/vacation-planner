@@ -1225,7 +1225,7 @@ let editNo=null,editType=null;
 
 function openEdit(no){
   editNo=no;const v=S.vacations.find(x=>x.no===no);editType=v.type;
-  const badge=g('edit-badge');badge.textContent=no+'회차';badge.style.background=C[v.type]||'#888';
+  const badge=g('edit-badge');badge.textContent=(SESS[no]||no)+'회차';badge.style.background=C[v.type]||'#888';
   g('edit-s').value=v.start;g('edit-e').value=v.end;
   const tg=g('edit-tg');tg.innerHTML='';
   TYPES.forEach(t=>{
@@ -1263,7 +1263,7 @@ g('edit-ok').onclick=()=>{
 };
 
 g('edit-del').onclick=()=>{
-  if(!confirm(editNo+'회차를 삭제할까요?'))return;
+  if(!confirm((SESS[editNo]||editNo)+'회차 중 이 건을 삭제할까요?'))return;
   const oldV=S.vacations.find(v=>v.no===editNo);
   if(oldV?.subitem)applyUsage(oldV.type,oldV.subitem,-days(oldV.start,oldV.end));
   S.vacations=S.vacations.filter(v=>v.no!==editNo);
@@ -1286,16 +1286,22 @@ const VG={
 function vacGroup(type){ return VG[type]||'wi'; }
 
 // 날짜가 이어지는(하루도 안 비는) 휴가들은 한 번 나간 것으로 본다.
-// 예) 3/5~3/8 + 3/9~3/12 는 2건이지만 1회차.
+// 예) 3/5~3/8 + 3/9~3/12 는 2건이지만 둘 다 1회차.
+// v.no 는 수정·삭제용 식별자이므로 그대로 두고, 표시용 회차를 따로 매긴다.
+let SESS={};
+function sessionMap(hvac){
+  const a=[...hvac].sort((x,y)=>x.sd-y.sd), m={};
+  let n=0,end=null;
+  a.forEach((v,i)=>{
+    if(i===0||v.sd>addD(end,1)){ n++; end=v.ed; }   // 하루 이상 비면 새 회차
+    else if(v.ed>end) end=v.ed;
+    m[v.no]=n;
+  });
+  return m;
+}
 function countSessions(hvac){
-  if(!hvac.length)return 0;
-  const a=[...hvac].sort((x,y)=>x.sd-y.sd);
-  let n=1,end=a[0].ed;
-  for(let i=1;i<a.length;i++){
-    if(a[i].sd<=addD(end,1)){ if(a[i].ed>end) end=a[i].ed; }  // 붙어 있음 → 같은 회차
-    else { n++; end=a[i].ed; }
-  }
-  return n;
+  const v=Object.values(sessionMap(hvac));
+  return v.length?Math.max(...v):0;
 }
 
 function renderStrip(hvac,rs){
@@ -1335,6 +1341,7 @@ function renderStrip(hvac,rs){
 function render(){
   const hvac=hydrate(S.vacations),vm=vacMap(hvac),rs=S.enlist?rankSched(S.enlist,S.branch):[];
   const today=new Date();
+  SESS=sessionMap(hvac);
   renderStrip(hvac,rs);
 
   // dday
@@ -1435,7 +1442,7 @@ function buildMonth({y,m},hvac,vm,rs){
       else el.classList.add('vm');
       el.style.background=col;el.style.color='#000';
       el.onclick=ev=>{ev.stopPropagation();openEdit(vac.no);};
-      el.onmouseenter=ev=>showTT(ev,`<b>${vac.no}회차</b> ${vac.type}<br>${vac.start} ~ ${vac.end} (${vac.days}일)<br><span style="color:var(--accent);font-size:10px">✏️ 클릭하여 수정</span>`);
+      el.onmouseenter=ev=>showTT(ev,`<b>${SESS[vac.no]||vac.no}회차</b> ${vac.type}<br>${vac.start} ~ ${vac.end} (${vac.days}일)<br><span style="color:var(--accent);font-size:10px">✏️ 클릭하여 수정</span>`);
       el.onmousemove=moveTT;el.onmouseleave=hideTT;
     } else {
       el.classList.add('emp');
@@ -1458,7 +1465,7 @@ function buildMonth({y,m},hvac,vm,rs){
     mvacs.forEach(v=>{
       const vi=document.createElement('div');vi.className='vi';
       vi.style.background=(C[v.type]||'#888')+'22';vi.style.border=`1px solid ${(C[v.type]||'#888')}44`;
-      vi.innerHTML=`<div class="pdot" style="background:${C[v.type]||'#888'}"></div><div class="vi-l">${v.no}회차 ${v.type}</div><div class="vi-d">${v.start.slice(5)}~${v.end.slice(5)}</div><div class="vi-n" style="color:${C[v.type]||'#888'}">${v.days}일</div>`;
+      vi.innerHTML=`<div class="pdot" style="background:${C[v.type]||'#888'}"></div><div class="vi-l">${SESS[v.no]||v.no}회차 ${v.type}</div><div class="vi-d">${v.start.slice(5)}~${v.end.slice(5)}</div><div class="vi-n" style="color:${C[v.type]||'#888'}">${v.days}일</div>`;
       vi.onclick=()=>openEdit(v.no);
       vl.appendChild(vi);
     });
