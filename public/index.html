@@ -155,7 +155,22 @@ input,select,button,textarea{font-family:inherit;}
 /* TOAST */
 #toast{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1a1d2e;color:#e8eaf6;border:1px solid var(--accent);border-radius:9px;padding:7px 18px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;}
 
-@media(max-width:600px){.mg{grid-template-columns:1fr;}.cal{padding:10px;}}
+@media(max-width:600px){
+  .mg{grid-template-columns:1fr;}
+  .cal{padding:10px;}
+
+  /* 제목 + D-day 가 첫 줄, 버튼들이 둘째 줄.
+     ::after 로 강제 줄바꿈을 넣어 제목이 눌려 세로로 쌓이는 것을 막는다. */
+  .nav{padding:10px 12px;gap:8px;}
+  .nav-title{order:1;flex:1 1 auto;font-size:15px;white-space:nowrap;}
+  .dday{order:2;}
+  .nav::after{content:"";flex-basis:100%;order:3;height:0;}
+  .btn{order:4;flex:1 1 0;min-width:0;padding:7px 6px;font-size:11px;white-space:nowrap;}
+
+  .stat{min-width:62px;padding:8px 5px;}
+  .stat-v{font-size:14px;}
+  .legend{padding:7px 12px;gap:5px;font-size:11px;}
+}
 </style>
 </head>
 <body>
