@@ -4,29 +4,43 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎖️ 병사 휴가 플래너</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
 <style>
-:root{--bg:#f5f6fa;--surf:#fff;--surf2:#f0f1f7;--surf3:#e8eaf2;--border:#d8dae8;--text:#1a1d2e;--dim:#7b80a8;--accent:#6c72f5;--green:#06d6a0;--red:#ff4757;--yellow:#e6a800;--purple:#7c55e8;}
+:root{
+  /* 종이·잉크 : 살짝 푸른 회색. 크림/세피아 계열은 의도적으로 피함 */
+  --bg:#F3F5F8;--surf:#FFFFFF;--surf2:#F1F3F7;--surf3:#E7EAF0;--border:#DFE3EB;
+  --text:#151821;--dim:#6D7488;
+  /* 구조색은 하나(군청). 화면의 채도는 휴가 종류 색에만 쓴다 */
+  --accent:#24305A;--accent-soft:#E8EBF3;
+  /* 신호색 : 오늘·전역·삭제에만 */
+  --red:#C0392B;
+  --green:#0E7C66;--yellow:#8A6100;--purple:#463C7A;
+  /* 타이포 스케일 */
+  --t1:12px;--t2:13px;--t3:15px;--t4:18px;--t5:24px;--t6:40px;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;font-size:14px;}
+body{background:var(--bg);color:var(--text);font-family:'Pretendard Variable',Pretendard,system-ui,-apple-system,sans-serif;min-height:100vh;font-size:var(--t3);line-height:1.5;-webkit-font-smoothing:antialiased;}
 input,select,button,textarea{font-family:inherit;}
 
 /* NAV */
 /* 첫 줄: 제목 + D-day / 둘째 줄: 버튼 4개.
    ::after 가 폭 100%를 차지해 order 2와 4 사이에서 줄을 강제로 끊는다. */
 .nav{background:var(--surf);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100;}
-.nav-title{order:1;flex:1 1 auto;font-weight:800;font-size:16px;}
+.nav-title{order:1;flex:1 1 auto;font-weight:800;font-size:var(--t4);letter-spacing:-.01em;}
 .nav-title span{color:var(--accent);}
-.dday{order:2;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.dday{order:2;background:var(--red);color:#fff;font-size:var(--t2);font-weight:700;padding:5px 12px;border-radius:20px;font-variant-numeric:tabular-nums;}
 .nav::after{content:"";order:3;flex-basis:100%;height:0;}
-.btn{order:4;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;}
-.btn-save{background:var(--accent);color:#fff;}
-.btn-share{background:var(--green);color:#000;}
-.btn-imp{background:#f4a261;color:#000;}
-.btn-cloud{background:var(--surf2);color:var(--dim);border:1px solid var(--border);}
+.btn{order:4;background:var(--surf);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px 15px;font-size:var(--t2);font-weight:600;cursor:pointer;transition:border-color .15s,background .15s;}
+.btn:hover{border-color:var(--accent);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.btn-save{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700;}
+.btn-share,.btn-imp{background:var(--surf);}
+.btn-cloud{background:var(--surf);color:var(--dim);}
 .btn-cloud.on{background:#e8f8f2;color:#04916e;border-color:#7fe3c4;}
 .btn-cloud.syncing{opacity:.6;}
 .cl-mail{font-size:11px;color:var(--dim);word-break:break-all;background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:7px 10px;margin-bottom:10px;}
-.cl-note{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:10px;}
+.cl-note{font-size:var(--t1);color:var(--dim);line-height:1.65;margin-bottom:10px;}
 .cl-warn{font-size:11px;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:8px 10px;line-height:1.6;}
 .cl-join{font-size:11px;color:#5b3fb8;background:#f3efff;border:1px solid #d6c9fb;border-radius:7px;padding:8px 10px;line-height:1.6;margin-bottom:10px;}
 .cl-sec{font-size:11px;font-weight:700;color:var(--text);border-top:1px solid var(--border);margin-top:14px;padding-top:12px;margin-bottom:6px;}
@@ -34,38 +48,57 @@ input,select,button,textarea{font-family:inherit;}
 
 /* TABS */
 .tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--border);}
-.tab{flex:1;padding:11px 6px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;border-bottom:2px solid transparent;color:var(--dim);}
+.tab{flex:1;padding:14px 6px;text-align:center;font-size:var(--t3);font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--dim);}
 .tab.on{color:var(--accent);border-bottom-color:var(--accent);}
 .panel{display:none;}.panel.on{display:block;}
 
 /* STATS */
 .stats{display:flex;overflow-x:auto;background:var(--surf);border-bottom:1px solid var(--border);}
-.stat{flex:1;min-width:70px;padding:9px 6px;text-align:center;border-right:1px solid var(--border);}
+.stat{flex:1;min-width:88px;padding:14px 10px;text-align:center;border-right:1px solid var(--border);}
 .stat:last-child{border-right:none;}
-.stat-l{font-size:9px;color:var(--dim);margin-bottom:2px;}
-.stat-v{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;}
-.stat-s{font-size:9px;color:var(--dim);margin-top:1px;}
+.stat-l{font-size:var(--t1);color:var(--dim);margin-bottom:5px;letter-spacing:.02em;}
+.stat-v{font-size:var(--t5);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--text);}
+.stat-s{font-size:var(--t1);color:var(--dim);margin-top:3px;}
+
+/* 복무 스트립 — 이 앱의 시그니처.
+   복무 전체를 한 줄로 놓고 계급 구간 / 계획한 휴가 / 오늘을 그 위에 겹친다.
+   화면에서 채도를 갖는 건 휴가 눈금과 오늘 표시뿐이다. */
+.strip{background:var(--surf);border-bottom:1px solid var(--border);padding:28px 20px 24px;}
+.strip-in{max-width:1400px;margin:0 auto;}
+.strip-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+.strip-num{font-size:var(--t6);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums;}
+.strip-unit{font-size:var(--t2);color:var(--dim);font-weight:600;}
+.strip-rank{margin-left:auto;font-size:var(--t2);color:var(--dim);}
+.strip-rank b{color:var(--text);font-weight:700;}
+.strip-bar{position:relative;height:36px;border-radius:9px;background:var(--surf3);overflow:hidden;}
+.strip-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);border-right:1px solid #C9D0E4;}
+.strip-rk{position:absolute;top:0;bottom:0;width:1px;background:var(--border);}
+.strip-rk span{position:absolute;top:50%;left:6px;transform:translateY(-50%);font-size:var(--t1);font-weight:600;color:var(--text);white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
+.strip-vac{position:absolute;top:0;bottom:0;border-radius:1px;}
+.strip-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);}
+.strip-today::after{content:"";position:absolute;top:0;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);}
+.strip-ends{display:flex;justify-content:space-between;font-size:var(--t1);color:var(--dim);margin-top:9px;font-variant-numeric:tabular-nums;}
 
 /* LEGEND */
-.legend{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px;background:var(--surf);border-bottom:1px solid var(--border);}
-.li{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--dim);}
-.ld{width:8px;height:8px;border-radius:2px;}
+.legend{display:flex;flex-wrap:wrap;gap:10px 14px;padding:12px 18px;background:var(--surf);border-bottom:1px solid var(--border);}
+.li{display:flex;align-items:center;gap:5px;font-size:var(--t1);color:var(--dim);}
+.ld{width:10px;height:10px;border-radius:3px;}
 
 /* CALENDAR */
-.cal{padding:16px;display:flex;flex-direction:column;gap:20px;}
-.yr-lbl{font-size:10px;font-weight:800;color:var(--accent);letter-spacing:3px;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:10px;}
-.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.cal{padding:24px 20px 40px;display:flex;flex-direction:column;gap:32px;max-width:1400px;margin:0 auto;width:100%;}
+.yr-lbl{font-size:var(--t1);font-weight:700;color:var(--dim);letter-spacing:.22em;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
 .mc{background:var(--surf);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .mc.hv{border-color:var(--accent);box-shadow:0 2px 12px rgba(108,114,245,.15);}
 .mh{padding:9px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
-.mn{font-size:13px;font-weight:700;}
-.mcnt{font-size:10px;background:var(--accent);color:#fff;padding:2px 8px;border-radius:10px;}
+.mn{font-size:var(--t3);font-weight:700;}
+.mcnt{font-size:var(--t1);font-weight:600;background:var(--accent-soft);color:var(--accent);padding:3px 9px;border-radius:10px;}
 .ci{padding:8px 9px 10px;}
 .wh{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px;}
-.wh span{text-align:center;font-size:9px;font-weight:700;color:var(--dim);}
+.wh span{text-align:center;font-size:var(--t1);font-weight:600;color:var(--dim);padding-bottom:4px;}
 .wh span:first-child{color:#e74c3c;}.wh span:last-child{color:#3498db;}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:10px;border-radius:4px;position:relative;user-select:none;}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:var(--t2);border-radius:5px;position:relative;user-select:none;font-variant-numeric:tabular-nums;}
 .cd.sun{color:#e74c3c;}.cd.sat{color:#3498db;}
 .cd.vac{font-weight:700;cursor:pointer;color:#000;}
 .cd.vac:hover{transform:scale(1.18);z-index:5;}
@@ -74,21 +107,21 @@ input,select,button,textarea{font-family:inherit;}
 .cd.sel{background:rgba(108,114,245,.25)!important;border-radius:3px;}
 .cd.emp:hover{background:rgba(108,114,245,.1);cursor:crosshair;}
 .vl{padding:0 9px 9px;display:flex;flex-direction:column;gap:3px;}
-.vi{display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:7px;font-size:11px;cursor:pointer;}
+.vi{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:8px;font-size:var(--t2);cursor:pointer;}
 .vi:hover{filter:brightness(1.08);}
-.vi-l{flex:1;font-weight:600;}.vi-d{font-size:9px;opacity:.7;}.vi-n{font-weight:800;font-size:11px;}
+.vi-l{flex:1;font-weight:600;}.vi-d{font-size:var(--t1);opacity:.75;}.vi-n{font-weight:800;font-size:var(--t2);}
 
 /* SETTINGS */
-.sw{padding:16px;display:flex;flex-direction:column;gap:16px;}
-.ss{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:16px;}
-.st{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.sw{padding:24px 20px 40px;display:flex;flex-direction:column;gap:20px;max-width:900px;margin:0 auto;width:100%;}
+.ss{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.st{font-size:var(--t4);font-weight:700;color:var(--text);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;letter-spacing:-.01em;}
 .fl{margin-bottom:10px;}.fl:last-child{margin-bottom:0;}
-.fl label{font-size:11px;color:var(--dim);display:block;margin-bottom:4px;}
-.fi{width:100%;background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;color:var(--text);font-size:13px;outline:none;}
+.fl label{font-size:var(--t1);color:var(--dim);display:block;margin-bottom:6px;}
+.fi{width:100%;background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-size:var(--t3);outline:none;}
 .fi:focus{border-color:var(--accent);}
-.prog-bg{height:9px;background:var(--surf3);border-radius:5px;overflow:hidden;margin-top:8px;}
-.prog-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),#a78bfa);transition:width .4s;}
-.prog-lbl{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-top:3px;}
+.prog-bg{height:10px;background:var(--surf3);border-radius:5px;overflow:hidden;margin-top:10px;}
+.prog-fill{height:100%;border-radius:5px;background:var(--accent);transition:width .4s;}
+.prog-lbl{display:flex;justify-content:space-between;font-size:var(--t1);color:var(--dim);margin-top:6px;font-variant-numeric:tabular-nums;}
 
 /* POOL TABLE */
 .pt-hd{display:grid;grid-template-columns:1fr 50px 50px 46px 22px;gap:4px;padding:4px 8px;background:var(--surf3);border-radius:7px 7px 0 0;font-size:10px;font-weight:700;color:var(--dim);border:1px solid var(--border);border-bottom:none;}
@@ -124,11 +157,11 @@ input,select,button,textarea{font-family:inherit;}
 .ov.on{display:flex;}
 .modal{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:20px;width:330px;max-width:92vw;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:mIn .16s ease;}
 @keyframes mIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
-.mt{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.mt{font-size:var(--t4);font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .mb{font-size:10px;padding:2px 8px;border-radius:7px;color:#000;font-weight:700;}
 .mr{margin-bottom:11px;}
-.ml{font-size:11px;color:var(--dim);margin-bottom:3px;}
-.mi{width:100%;background:var(--surf2);border:1px solid var(--border);border-radius:7px;padding:7px 10px;color:var(--text);font-size:13px;outline:none;}
+.ml{font-size:var(--t1);color:var(--dim);margin-bottom:5px;}
+.mi{width:100%;background:var(--surf2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:var(--t3);outline:none;}
 .mi:focus{border-color:var(--accent);}
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
 .tb{padding:6px 4px;border-radius:6px;border:2px solid transparent;font-size:11px;font-weight:700;cursor:pointer;color:#000;}
@@ -183,7 +216,6 @@ input,select,button,textarea{font-family:inherit;}
   <button class="btn btn-share" onclick="openShareModal()">🔗 공유</button>
   <button class="btn btn-imp" onclick="document.getElementById('imp-file').click()">📥 가져오기</button>
   <button class="btn btn-save" onclick="save()">💾 저장</button>
-  <div class="dday" id="dday">D-???</div>
 </div>
 <input type="file" id="imp-file" accept=".json" style="display:none">
 
@@ -195,14 +227,27 @@ input,select,button,textarea{font-family:inherit;}
 
 <!-- CALENDAR PANEL -->
 <div class="panel on" id="panel-cal">
+  <!-- 복무 스트립 -->
+  <div class="strip" id="strip" style="display:none">
+   <div class="strip-in">
+    <div class="strip-top">
+     <div class="strip-num" id="st-num">—</div>
+     <div class="strip-unit">일 남음</div>
+     <div class="strip-rank" id="st-rank">—</div>
+    </div>
+    <div class="strip-bar" id="st-bar"></div>
+    <div class="strip-ends"><span id="st-s">—</span><span id="st-pct">—</span><span id="st-e">—</span></div>
+   </div>
+  </div>
+
   <div class="stats" id="stats">
-    <div class="stat"><div class="stat-l">총 부여</div><div class="stat-v" id="s-tot" style="color:var(--accent)">—</div><div class="stat-s">일</div></div>
-    <div class="stat"><div class="stat-l">현재 가능</div><div class="stat-v" id="s-av" style="color:#06d6a0">—</div><div class="stat-s" id="s-av-r">계급 기준</div></div>
-    <div class="stat"><div class="stat-l">계획 사용</div><div class="stat-v" id="s-us" style="color:#06d6a0">—</div><div class="stat-s" id="s-us-r">—</div></div>
-    <div class="stat"><div class="stat-l">잔여</div><div class="stat-v" id="s-rm" style="color:var(--yellow)">—</div><div class="stat-s">일</div></div>
-    <div class="stat"><div class="stat-l">남은 복무</div><div class="stat-v" id="s-mo" style="color:#a78bfa">—</div><div class="stat-s" id="s-mo-s">개월</div></div>
-    <div class="stat"><div class="stat-l">월 평균</div><div class="stat-v" id="s-pm" style="color:#f4a261">—</div><div class="stat-s">일/월</div></div>
-    <div class="stat"><div class="stat-l">마지막 복귀</div><div class="stat-v" id="s-la" style="color:var(--purple)">—</div><div class="stat-s" id="s-la-y">—</div></div>
+    <div class="stat"><div class="stat-l">총 부여</div><div class="stat-v" id="s-tot">—</div><div class="stat-s">일</div></div>
+    <div class="stat"><div class="stat-l">현재 가능</div><div class="stat-v" id="s-av">—</div><div class="stat-s" id="s-av-r">계급 기준</div></div>
+    <div class="stat"><div class="stat-l">계획 사용</div><div class="stat-v" id="s-us">—</div><div class="stat-s" id="s-us-r">—</div></div>
+    <div class="stat"><div class="stat-l">잔여</div><div class="stat-v" id="s-rm" style="color:var(--accent)">—</div><div class="stat-s">일</div></div>
+    <div class="stat"><div class="stat-l">남은 복무</div><div class="stat-v" id="s-mo">—</div><div class="stat-s" id="s-mo-s">개월</div></div>
+    <div class="stat"><div class="stat-l">월 평균</div><div class="stat-v" id="s-pm">—</div><div class="stat-s">일/월</div></div>
+    <div class="stat"><div class="stat-l">마지막 복귀</div><div class="stat-v" id="s-la">—</div><div class="stat-s" id="s-la-y">—</div></div>
   </div>
   <div class="legend">
     <div class="li"><div class="ld" style="background:#ff6b9d"></div>이병연가</div>
@@ -1207,12 +1252,41 @@ g('edit-del').onclick=()=>{
 // ════════════════════════════════════
 //  RENDER
 // ════════════════════════════════════
+function renderStrip(hvac,rs){
+  const el=g('strip'); if(!el)return;
+  if(!S.enlist||!S.discharge){el.style.display='none';return;}
+  el.style.display='block';
+  const s=ld(S.enlist), e=ld(S.discharge), now=new Date();
+  const total=Math.max(1,(e-s)/864e5);
+  const pos=d=>Math.min(100,Math.max(0,((d-s)/864e5)/total*100));
+
+  g('st-num').textContent=Math.max(0,Math.ceil((e-now)/864e5)).toLocaleString();
+  g('st-pct').textContent=Math.round(pos(now))+'% 복무';
+  let cur=rs.length?rs[0].rank:'이병';
+  rs.forEach(r=>{ if(ld(r.from)<=now) cur=r.rank; });
+  g('st-rank').innerHTML='현재 <b>'+cur+'</b>';
+
+  const bar=g('st-bar'); bar.innerHTML='';
+  const add=(cls,style,html)=>{const d=document.createElement('div');d.className=cls;d.setAttribute('style',style);if(html)d.innerHTML=html;bar.appendChild(d);};
+  add('strip-fill','width:'+pos(now)+'%');
+  hvac.forEach(v=>{ const a=pos(v.sd), b=pos(addD(v.ed,1));
+    add('strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+(C[v.type]||'#888')); });
+  // 계급선은 휴가 눈금 뒤에 그린다 — 라벨이 눈금에 가리지 않도록
+  rs.forEach((r,i)=>{ if(!i)return; const x=pos(ld(r.from)); if(x<=0||x>=100)return;
+    add('strip-rk','left:'+x+'%','<span>'+r.rank+'</span>'); });
+  add('strip-today','left:'+pos(now)+'%');
+
+  g('st-s').textContent=S.enlist.replace(/-/g,'.');
+  g('st-e').textContent=S.discharge.replace(/-/g,'.');
+}
+
 function render(){
   const hvac=hydrate(S.vacations),vm=vacMap(hvac),rs=S.enlist?rankSched(S.enlist,S.branch):[];
   const today=new Date();
+  renderStrip(hvac,rs);
 
   // dday
-  if(S.discharge){const d=Math.ceil((new Date(S.discharge)-today)/864e5);g('dday').textContent='D-'+d.toLocaleString();}
+  if(S.discharge&&g('dday')){const d=Math.ceil((new Date(S.discharge)-today)/864e5);g('dday').textContent='D-'+d.toLocaleString();}
 
   // stats
   const tot=Object.values(S.vacPool||{}).reduce((a,b)=>a+b,0);
