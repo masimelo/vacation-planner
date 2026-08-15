@@ -11,11 +11,14 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 input,select,button,textarea{font-family:inherit;}
 
 /* NAV */
+/* 첫 줄: 제목 + D-day / 둘째 줄: 버튼 4개.
+   ::after 가 폭 100%를 차지해 order 2와 4 사이에서 줄을 강제로 끊는다. */
 .nav{background:var(--surf);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100;}
-.nav-title{font-weight:800;font-size:16px;flex:1;}
+.nav-title{order:1;flex:1 1 auto;font-weight:800;font-size:16px;}
 .nav-title span{color:var(--accent);}
-.dday{background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
-.btn{border:none;border-radius:8px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;}
+.dday{order:2;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.nav::after{content:"";order:3;flex-basis:100%;height:0;}
+.btn{order:4;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;}
 .btn-save{background:var(--accent);color:#fff;}
 .btn-share{background:var(--green);color:#000;}
 .btn-imp{background:#f4a261;color:#000;}
@@ -159,13 +162,11 @@ input,select,button,textarea{font-family:inherit;}
   .mg{grid-template-columns:1fr;}
   .cal{padding:10px;}
 
-  /* 제목 + D-day 가 첫 줄, 버튼들이 둘째 줄.
-     ::after 로 강제 줄바꿈을 넣어 제목이 눌려 세로로 쌓이는 것을 막는다. */
+  /* 줄 나눔은 기본 스타일에 있고, 여기서는 좁은 화면 크기만 조정한다.
+     버튼은 flex:1 1 0 으로 화면 폭을 균등하게 나눠 가진다. */
   .nav{padding:10px 12px;gap:8px;}
-  .nav-title{order:1;flex:1 1 auto;font-size:15px;white-space:nowrap;}
-  .dday{order:2;}
-  .nav::after{content:"";flex-basis:100%;order:3;height:0;}
-  .btn{order:4;flex:1 1 0;min-width:0;padding:7px 6px;font-size:11px;white-space:nowrap;}
+  .nav-title{font-size:15px;white-space:nowrap;}
+  .btn{flex:1 1 0;min-width:0;padding:7px 6px;font-size:11px;white-space:nowrap;}
 
   .stat{min-width:62px;padding:8px 5px;}
   .stat-v{font-size:14px;}
