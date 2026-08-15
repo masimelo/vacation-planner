@@ -1,0 +1,11 @@
+{
+  // Worker 이름 — Cloudflare 대시보드의 Worker 이름과 반드시 같아야 빌드가 성공합니다.
+  "name": "vacation-planner",
+  "compatibility_date": "2026-08-15",
+
+  // 서버 코드 없이 public/ 안의 정적 파일만 서빙합니다.
+  // README와 .sql 은 public/ 밖에 있으므로 웹에 노출되지 않습니다.
+  "assets": {
+    "directory": "./public"
+  }
+}

@@ -4,13 +4,17 @@
 서버 코드 없이 동작하며, **Supabase 설정을 비워두면 기존처럼 브라우저 저장만으로 그대로 작동**합니다.
 
 ```
-deploy/
-├── index.html              앱 본체 (클라우드 동기화 + 공동 편집 포함)
+.
+├── public/                 ← 웹에 서빙되는 건 이 폴더뿐
+│   ├── index.html          앱 본체 (클라우드 동기화 + 공동 편집 포함)
+│   └── _headers            보안 헤더
+├── wrangler.jsonc          Cloudflare 배포 설정
 ├── supabase-schema-v2.sql  DB 테이블 + 보안정책  ← 이걸 실행하세요
 ├── supabase-schema.sql     v1(1인용). 참고용으로만 남겨둠
-├── _headers                Cloudflare Pages 보안 헤더
 └── README.md               이 문서
 ```
+
+스키마 파일과 이 문서는 `public/` 밖에 있어서 웹에 노출되지 않습니다.
 
 ---
 
@@ -46,18 +50,34 @@ window.SUPABASE_ANON_KEY = 'sb_publishable_...';   // 변수명은 anon 이지�
 
 ---
 
-## 3단계 — Cloudflare Pages에 올리기 (약 5분)
+## 3단계 — Cloudflare에 올리기
 
-1. <https://dash.cloudflare.com> 가입 → 왼쪽 **Workers & Pages** → **Create** → **Pages** 탭
-2. **Upload assets** 선택 (GitHub 연동 없이 바로 올리는 방식)
-3. 프로젝트 이름 입력 (예: `vacation-planner`) → **Create project**
-4. `deploy` 폴더를 통째로 드래그해서 올린 뒤 **Deploy site**
-5. 몇 초 뒤 주소가 나옵니다 → `https://vacation-planner.pages.dev`
+### Git 연동 (권장)
 
-빌드 설정은 필요 없습니다 (정적 파일이라 그대로 서빙됩니다).
+GitHub에 push하면 Cloudflare가 알아서 배포합니다.
 
-### 나중에 수정본 올리기
-같은 프로젝트 → **Create new deployment** → 폴더 다시 드래그. 주소는 그대로 유지됩니다.
+1. <https://dash.cloudflare.com> → **Workers & Pages** → `vacation-planner` 선택
+2. **Settings** → **Builds** → **Connect**
+3. GitHub 계정 인증 → `masimelo/vacation-planner` 레포 선택
+4. 빌드 설정 (정적 파일이라 빌드 과정이 없습니다)
+
+| 항목 | 값 |
+|---|---|
+| Build command | *(비워둠)* |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | `/` |
+
+이후로는 `git push` 하면 자동 배포됩니다.
+
+> ⚠️ `wrangler.jsonc`의 `name`이 대시보드의 Worker 이름과 **다르면 빌드가 실패합니다.**
+> Worker 이름을 바꿨다면 이 파일도 같이 고치세요.
+
+### 직접 업로드 (Git 없이)
+
+**`public` 폴더만** 올리면 됩니다. 나머지 파일은 서빙 대상이 아닙니다.
+
+> ⚠️ Cloudflare **Pages**를 직접 업로드로 만들면 나중에 Git 연동으로 **전환할 수 없습니다**
+> (새 프로젝트를 만들어야 하고 주소가 바뀝니다). **Workers**는 전환이 됩니다.
 
 ---
 
