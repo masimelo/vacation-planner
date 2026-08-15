@@ -70,10 +70,11 @@ input,select,button,textarea{font-family:inherit;}
 .strip-unit{font-size:var(--t2);color:var(--dim);font-weight:600;}
 .strip-rank{margin-left:auto;font-size:var(--t2);color:var(--dim);}
 .strip-rank b{color:var(--text);font-weight:700;}
-.strip-bar{position:relative;height:36px;border-radius:9px;background:var(--surf3);overflow:hidden;}
+.strip-bar{position:relative;height:50px;border-radius:9px;background:var(--surf3);overflow:hidden;}
 .strip-fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);border-right:1px solid #C9D0E4;}
 .strip-rk{position:absolute;top:0;bottom:0;width:1px;background:var(--border);}
-.strip-rk span{position:absolute;top:50%;left:6px;transform:translateY(-50%);font-size:var(--t1);font-weight:600;color:var(--text);white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
+.strip-rk span{position:absolute;top:50%;left:6px;transform:translateY(-50%);font-size:var(--t1);font-weight:700;color:var(--text);white-space:nowrap;line-height:1.35;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
+.strip-rk em{display:block;font-style:normal;font-weight:500;color:var(--dim);font-variant-numeric:tabular-nums;}
 .strip-vac{position:absolute;top:0;bottom:0;border-radius:1px;}
 .strip-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);}
 .strip-today::after{content:"";position:absolute;top:0;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);}
@@ -186,7 +187,7 @@ input,select,button,textarea{font-family:inherit;}
 
 /* RANK INFO */
 .ri-box{background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:11px;margin-top:8px;}
-.rc{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;color:#000;margin:2px;}
+.rc{display:inline-block;font-size:var(--t1);font-weight:600;padding:4px 9px;border-radius:8px;color:#000;margin:3px;font-variant-numeric:tabular-nums;}
 
 /* TOAST */
 #toast{display:none;position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1a1d2e;color:#e8eaf6;border:1px solid var(--accent);border-radius:9px;padding:7px 18px;font-size:13px;font-weight:700;z-index:9999;pointer-events:none;}
@@ -954,7 +955,13 @@ function showRI(enlist){
   const branch=g('c-br').value,rs=rankSched(enlist,branch);
   const rc={이병:'#adb5ff',일병:'#ff8c69',상병:'#ff9a3c',병장:'#ffd166'};
   box.style.display='block';
-  row.innerHTML=rs.map(s=>`<span class="rc" style="background:${rc[s.rank]}">${s.rank}${s.isE?' (입대)':''} ${s.from.slice(2)}</span>`).join('→');
+  const di=(g('c-di')&&g('c-di').value)||S.discharge||'';
+  row.innerHTML=rs.map((s,i)=>{
+    const nx=rs[i+1];
+    const to=nx?fmt(addD(ld(nx.from),-1)):di;   // 다음 진급 전날, 마지막은 전역일
+    const range=s.from.slice(2)+(to?' ~ '+to.slice(2):'');
+    return `<span class="rc" style="background:${rc[s.rank]}">${s.rank}${s.isE?' (입대)':''} ${range}</span>`;
+  }).join(' ');
 }
 
 function updateProg(){
@@ -1273,7 +1280,7 @@ function renderStrip(hvac,rs){
     add('strip-vac','left:'+a+'%;width:'+Math.max(.35,b-a)+'%;background:'+(C[v.type]||'#888')); });
   // 계급선은 휴가 눈금 뒤에 그린다 — 라벨이 눈금에 가리지 않도록
   rs.forEach((r,i)=>{ if(!i)return; const x=pos(ld(r.from)); if(x<=0||x>=100)return;
-    add('strip-rk','left:'+x+'%','<span>'+r.rank+'</span>'); });
+    add('strip-rk','left:'+x+'%','<span>'+r.rank+'<em>'+r.from.slice(2).replace(/-/g,'.')+'</em></span>'); });
   add('strip-today','left:'+pos(now)+'%');
 
   g('st-s').textContent=S.enlist.replace(/-/g,'.');
