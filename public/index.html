@@ -253,9 +253,8 @@ input,select,button,textarea{font-family:inherit;}
 
   <div class="stats" id="stats">
     <div class="stat"><div class="stat-l">총 부여</div><div class="stat-v" id="s-tot">—</div><div class="stat-s">일</div></div>
-    <div class="stat"><div class="stat-l">이미 사용</div><div class="stat-v" id="s-ud">—</div><div class="stat-s">설정 표 기준</div></div>
     <div class="stat"><div class="stat-l">현재 가능</div><div class="stat-v" id="s-av">—</div><div class="stat-s" id="s-av-r">계급 기준</div></div>
-    <div class="stat"><div class="stat-l">계획 사용</div><div class="stat-v" id="s-us">—</div><div class="stat-s" id="s-us-r">—</div></div>
+    <div class="stat"><div class="stat-l">사용</div><div class="stat-v" id="s-us">—</div><div class="stat-s" id="s-us-r">—</div></div>
     <div class="stat"><div class="stat-l">잔여</div><div class="stat-v" id="s-rm" style="color:var(--accent)">—</div><div class="stat-s">일</div></div>
     <div class="stat"><div class="stat-l">남은 복무</div><div class="stat-v" id="s-mo">—</div><div class="stat-s" id="s-mo-s">개월</div></div>
     <div class="stat"><div class="stat-l">월 평균</div><div class="stat-v" id="s-pm">—</div><div class="stat-s">일/월</div></div>
@@ -1147,10 +1146,16 @@ function updateSI(type,selId,rowId,badgeId){
 }
 
 function applyUsage(type,sub,delta){
+  // 달력에 그린 휴가가 설정 표의 '사용' 열까지 올리면, 같은 휴가가
+  // '사용' 열과 달력 양쪽에 잡혀 두 번 차감된다. 그래서 자동 증가를 끊었다.
+  // '사용' 열은 이제 달력에 기록하지 않은 과거분을 직접 적는 칸으로만 쓴다.
+  return;
+  /* eslint-disable no-unreachable */
   if(type==='성과제외박'){const r=SK.find(r=>r.no===sub);if(r)r.uov=Math.max(0,(r.uov||0)+delta);sumSK();return;}
   const gid=TG[type];if(!gid)return;
   const item=PD[gid].find(r=>r.n===sub);if(item){item.u=Math.max(0,item.u+delta);sumPG(gid);renderPG(gid);}
 }
+/* eslint-enable no-unreachable */
 
 // ════════════════════════════════════
 //  DRAG SELECT
@@ -1327,8 +1332,10 @@ function render(){
   const tot=Object.values(S.vacPool||{}).reduce((a,b)=>a+b,0);
   const used=Object.values(S.vacUsed||{}).reduce((a,b)=>a+b,0);
   const plan=hvac.reduce((s,v)=>s+v.days,0);
-  const rem=tot-used-plan;
-  g('s-tot').textContent=tot+'일';g('s-ud').textContent=used+'일';g('s-us').textContent=plan+'일';g('s-us-r').textContent=hvac.length+'회차';g('s-rm').textContent=rem+'일';
+  const usedAll=used+plan;          // 설정 표에 적은 과거분 + 달력에 그린 휴가
+  const rem=tot-usedAll;
+  g('s-tot').textContent=tot+'일';g('s-us').textContent=usedAll+'일';
+  g('s-us-r').textContent=hvac.length+'회차';g('s-rm').textContent=rem+'일';
 
   if(S.enlist&&S.branch){
     const cr=curRank(S.enlist,S.branch);
